@@ -6,9 +6,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from configurations.env_config import settings
 
-engine = create_engine(url=settings.URL_DATABASE)
+engine = create_engine(url=settings.URL_Base)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-DataBase = declarative_base()
+Base = declarative_base()
 
 
 def get_db():

@@ -1,5 +1,5 @@
-from configurations.database_config import DataBase
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from configurations.database_config import Base
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from pydantic import BaseModel
@@ -7,7 +7,15 @@ from typing import Optional
 from models.role import RoleDTO
 
 
-class User(DataBase):
+groupe_user_association = Table(
+    'groupe_user',
+    Base.metadata,
+    Column('groupe_id', Integer, ForeignKey('groupes.id'), primary_key=True),
+    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True)
+)
+
+
+class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
     unique_id = Column(String(100))
@@ -19,6 +27,9 @@ class User(DataBase):
     profil = Column(String(255), default='')
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship("Role", back_populates="users")
+
+    # Relation many-to-many avec Groupe
+    groupes = relationship("Groupe", secondary=groupe_user_association, back_populates="users")
 
 
 # model d'entre

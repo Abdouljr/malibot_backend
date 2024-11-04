@@ -1,14 +1,14 @@
 from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
-from configurations.database_config import engine, SessionLocal
-from controllers import role_controller, auth_controller, groupe_controller
+from configurations.database_config import engine
+from controllers import role_controller, auth_controller, groupe_controller, tache_controller
 from models import user, role, groupe, tache, favori
 from services import role_service
 
 
 @asynccontextmanager
-async def lifespan(main: FastAPI):
+async def lifespan(app: FastAPI):
     role_service.init()
     print("Application started!")
     yield
@@ -20,6 +20,7 @@ app = FastAPI(lifespan=lifespan, title="MaliBot", version="1.0.0")
 app.include_router(auth_controller.router)
 app.include_router(role_controller.router)
 app.include_router(groupe_controller.router)
+app.include_router(tache_controller.router)
 
 user.Base.metadata.create_all(bind=engine)
 role.Base.metadata.create_all(bind=engine)

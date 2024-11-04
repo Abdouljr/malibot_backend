@@ -22,6 +22,7 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 Oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
+# sign in
 def sign_in(user: UserBase, db):
     exist_user = (db.query(User).filter(User.email == user.email).first())
     db_role = db.query(Role).filter(Role.name == 'USER').first()
@@ -42,6 +43,7 @@ def sign_in(user: UserBase, db):
     return get_token(db_user)
 
 
+# login
 def login(email: str, password: str, db):
     db_user = db.query(User).filter(User.email == email).first()
     if not db_user:
@@ -53,6 +55,7 @@ def login(email: str, password: str, db):
     return get_token(db_user)
 
 
+# generate token
 def generer_token(user: User, expiration_token: timedelta):
     encode = {'sub': user.email, 'uid': user.unique_id}
     expiration = datetime.utcnow() + expiration_token
@@ -60,17 +63,20 @@ def generer_token(user: User, expiration_token: timedelta):
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
+# get token
 def get_token(user: User):
     access = generer_token(user, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     refresh = generer_token(user, timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
     return {"access_token": access, "refresh_token": refresh}
 
 
+# hash password
 def hash_password(password: str):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())  # Mysql
     return hashed_password
 
 
+# get current user
 async def get_current_user(token: Annotated[str, Depends(Oauth2_bearer)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -84,6 +90,7 @@ async def get_current_user(token: Annotated[str, Depends(Oauth2_bearer)]):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Vous n'êtes pas autorisé")
 
 
+# create default admin
 def create_default_admin():
     session = SessionLocal()
     user = User(unique_id=str(uuid.uuid4()), username="Abdouljr", email="maiga@test.com",

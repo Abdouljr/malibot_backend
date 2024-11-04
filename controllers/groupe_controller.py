@@ -21,13 +21,6 @@ async def add(groupe: GroupeBase, user: user_dependency, db: Session = db_depend
     return groupe_service.add(user['uid'], groupe, db)
 
 
-@router.get("/all", response_model=List[GroupeDTO], status_code=status.HTTP_200_OK)
-async def get_all(user: user_dependency, db: Session = db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=message_erreur)
-    return groupe_service.get_all(db)
-
-
 @router.get("/get-for-user", response_model=List[GroupeDTO], status_code=status.HTTP_200_OK)
 async def get_for_user(user: user_dependency, db: Session = db_dependency):
     if user is None:

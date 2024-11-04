@@ -15,11 +15,6 @@ def add(user_unique_id, groupe: GroupeBase, db):
     return db_groupe
 
 
-def get_all(db):
-    groupes = db.query(Groupe).all()
-    return groupes
-
-
 def add_users_to_groupe(db, groupe_id: int, user_email: str):
     # Récupère le groupe par son ID
     groupe = db.query(Groupe).filter(Groupe.id == groupe_id).first()

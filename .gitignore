@@ -46,14 +46,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
-
-# Ressouces
-ressources/db_photo_client
-ressources/db_photo_participant
-ressources/images_participant
-ressources/logos
-ressources/qr_client_photographe
-ressources/qr_participant
-ressources/qr_photographe
-experiment

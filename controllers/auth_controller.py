@@ -10,11 +10,11 @@ from services import auth_service
 router = APIRouter(prefix='/auth', tags=['Authentification'])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/signin", status_code=status.HTTP_201_CREATED)
 async def sign_in(userBase: UserBase, db: Session = db_dependency):
     return auth_service.sign_in(userBase, db)
 
 
-@router.post("/token")
-async def connexion(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = db_dependency):
+@router.post("/login")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = db_dependency):
     return auth_service.login(form_data.username, form_data.password, db)

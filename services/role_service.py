@@ -18,7 +18,7 @@ def get_all(db):
     return roles
 
 
-def supprimer_role(role_id, db):
+def delete(role_id, db):
     db_role = db.query(Role).filter(Role.id == role_id).first()
     if db_role is None:
         raise HTTPException(status_code=404, detail='Role not found')

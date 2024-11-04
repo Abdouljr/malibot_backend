@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
 from configurations.database_config import Base
+from models.groupe import GroupeDTO
 
 
 class Tache(Base):
@@ -20,6 +21,7 @@ class Tache(Base):
 class TacheBase(BaseModel):
     titre: str
     date_echeance: datetime
+    groupe_id: int
 
 
 class TacheDTO(BaseModel):
@@ -27,3 +29,4 @@ class TacheDTO(BaseModel):
     titre: str
     date_echeance: datetime
     fait: bool
+    groupe: GroupeDTO

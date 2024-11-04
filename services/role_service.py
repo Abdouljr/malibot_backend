@@ -1,6 +1,7 @@
 from fastapi import HTTPException
-
+from configurations.database_config import SessionLocal
 from models.role import RoleBase, Role
+from services.auth_service import create_default_admin
 
 
 def add(role: RoleBase, db):
@@ -24,3 +25,16 @@ def supprimer_role(role_id, db):
     db.delete(db_role)
     db.commit()
     return {"message": "Role deleted", "status": True}
+
+
+def init():
+    default_roles = ['ADMIN', 'USER']
+    session = SessionLocal()
+    for role_name in default_roles:
+        db_role = session.query(Role).filter_by(name=role_name).first()
+        if not db_role:
+            db_role = Role(name=role_name)
+            session.add(db_role)
+    session.commit()
+    create_default_admin()
+

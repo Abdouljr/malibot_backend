@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from passlib.context import CryptContext
 from starlette import status
 
+from configurations.database_config import SessionLocal
 from models.user import UserBase, User
 from models.role import Role
 from jose import jwt, JWTError
@@ -16,7 +17,7 @@ router = APIRouter(prefix='/auth', tags=['Authentification'])
 SECRET_KEY = '77217A24432646294A404E635266556A586E3272357538782F413F442A472D4B'
 ALGORITHM = 'HS256'
 REFRESH_TOKEN_EXPIRE_DAYS = 7
-ACCESS_TOKEN_EXPIRE_MINUTES = 1
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 Oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
@@ -81,3 +82,13 @@ async def get_current_user(token: Annotated[str, Depends(Oauth2_bearer)]):
         return {'username': username, 'uid': unique_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Vous n'êtes pas autorisé")
+
+
+def create_default_admin():
+    session = SessionLocal()
+    user = User(unique_id=str(uuid.uuid4()), username="Abdouljr", email="maiga@test.com",
+                password=hash_password('1234'), role_id=1)
+    super_admin = session.query(User).filter_by(email=user.email).first()
+    if not super_admin:
+        session.add(user)
+        session.commit()

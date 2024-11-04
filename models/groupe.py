@@ -14,8 +14,7 @@ class Groupe(Base):
     description = Column(String(255), index=True)
     createdDate = Column(DateTime, default=datetime.utcnow)
     updatedDate = Column(DateTime, default=datetime.utcnow)
-
-    # Relation many-to-many avec User
+    taches = relationship("Tache", back_populates="groupe")
     users = relationship("User", secondary=groupe_user_association, back_populates="groupes")
 
 

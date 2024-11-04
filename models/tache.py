@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 
 from configurations.database_config import Base
 
@@ -12,6 +13,8 @@ class Tache(Base):
     titre = Column(String(100))
     date_echeance = Column(DateTime, default=datetime.utcnow)
     fait = Column(Boolean, default=False)
+    groupe_id = Column(Integer, ForeignKey("groupes.id"))
+    groupe = relationship("Groupe", back_populates="taches")
 
 
 class TacheBase(BaseModel):

@@ -28,7 +28,6 @@ class User(Base):
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship("Role", back_populates="users")
 
-    # Relation many-to-many avec Groupe
     groupes = relationship("Groupe", secondary=groupe_user_association, back_populates="users")
 
 
